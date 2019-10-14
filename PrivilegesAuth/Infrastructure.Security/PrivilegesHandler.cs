@@ -9,7 +9,8 @@ namespace Infrastructure.Security
 {
 	public class PrivilegesHandler : AuthorizationHandler<PrivilegeRequirement>
 	{
-		protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PrivilegeRequirement requirement)
+		protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
+			PrivilegeRequirement requirement)
 		{
 			if (context.User.HasPrivilege(requirement.Privilege))
 			{
