@@ -14,6 +14,7 @@ namespace PrivilegesAuth.Models
 
 	public enum LoginType
 	{
-		Simple
+		Simple,
+		CanDelete
 	}
 }

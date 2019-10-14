@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PrivilegesAuth.Controllers
@@ -37,6 +38,7 @@ namespace PrivilegesAuth.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+		[Authorize(Policy = "ApiDelete")]
         public void Delete(int id)
         {
         }

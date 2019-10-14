@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +49,13 @@ namespace PrivilegesAuth
 			});
 
 			services.AddScoped<AuthService>();
+			services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+			services.AddSingleton<IAuthorizationHandler, PrivilegesHandler>();
+
+			services.AddAuthorization(options =>
+				options.AddPolicy("Delete",
+				policy => policy.RequireClaim("Permission", "CanDeleteProducts", "CanDeleteCategories"))
+			);
 
 			services.AddSwaggerGen(gen =>
 			{

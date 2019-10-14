@@ -19,7 +19,7 @@ namespace PrivilegesAuth.Controllers
 		[HttpPost]
 		public async Task<string> Login([FromBody] LoginModel model)
 		{
-			return await AuthService.Login(model.Email, model.Password);
+			return await AuthService.Login(model);
 		}
     }
 }

@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Infrastructure.Security;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using PrivilegesAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -26,6 +28,21 @@ namespace PrivilegesAuth.Utils
 		{
 			return StringifyToken(BuildToken("Some user", email, "User", null));
 		}
+		public async Task<string> Login(LoginModel model)
+		{
+			JwtSecurityToken token = null;
+			switch (model.Type)
+			{
+				case LoginType.CanDelete:
+					token = BuildToken("Some user", model.Email, "User", new List<Privilege> { Privilege.CanDeleteData });
+					break;
+				default:
+					token = BuildToken("Some user", model.Email, "User", null);
+				break;
+			}
+
+			return await Task.FromResult(StringifyToken(token));
+		}
 
 
 		public string StringifyToken(JwtSecurityToken token)
@@ -33,7 +50,7 @@ namespace PrivilegesAuth.Utils
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 
-		private JwtSecurityToken BuildToken(string userName, string email, string role, string[] privileges)
+		private JwtSecurityToken BuildToken(string userName, string email, string role, IEnumerable<Privilege> privileges)
 		{
 			var claims = new[] {
 				new Claim("role", role),
@@ -42,7 +59,7 @@ namespace PrivilegesAuth.Utils
 				new Claim(ClaimTypes.Name, userName),
 				new Claim(ClaimTypes.NameIdentifier, userName),
 				new Claim(JwtRegisteredClaimNames.GivenName, userName),
-				//new Claim(PermissionConstants.PackedPermissionClaimType, InterviewService.Models.DBModels.Access.Permission.AssignInterview.ToString())
+				new Claim(PrivilegeConstants.PRIVILEGES_CLAIM_NAME, PrivilegesPacker.Pack(privileges))
 			};
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));

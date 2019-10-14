@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,10 +40,11 @@ namespace PrivilegesAuth.Controllers
         {
         }
 
-        // DELETE api/<controller>/5
         [HttpDelete("{id}")]
+		[HasPrivilege(Privilege.CanDeleteData)]
         public void Delete(int id)
         {
+			// implementation for delete data
         }
     }
 }
