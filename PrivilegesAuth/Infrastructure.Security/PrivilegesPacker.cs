@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Infrastructure.Security
@@ -8,7 +9,7 @@ namespace Infrastructure.Security
     {
 		public static string Pack(this IEnumerable<Privilege> privileges)
 		{
-			return string.Join(";", privileges);
+			return string.Join(";", privileges ?? Enumerable.Empty<Privilege>());
 		}
 
 		public static List<Privilege> Unpack(this string privileges)

@@ -9,6 +9,25 @@ namespace Infrastructure.Security
 {
     public static class UserExtensions
     {
+		public static T PerformInGroupScope<T>(this ClaimsPrincipal principal, int groupid, 
+			IEnumerable<Privilege> privileges, Func<T> action)
+		{
+			foreach (var p in privileges)
+			{
+				if(!HasGroupPrivilege(principal, groupid, p))
+				{
+					throw new InsufficientPrivilegeException($"User has no privilege {p}, which required to perform action");
+				}
+			}
+			return action();
+		}
+
+		public static bool HasGroupPrivilege(this ClaimsPrincipal principal, int groupId, Privilege privilege)
+		{
+			// logic that unpack privileges and check one for existing
+			return true;
+		}
+
 		public static bool HasPrivilege(this ClaimsPrincipal principal, string privilege)
 		{
 			var priv = (Privilege)Enum.Parse(typeof(Privilege), privilege);

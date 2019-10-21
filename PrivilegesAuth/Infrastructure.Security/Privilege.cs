@@ -8,6 +8,7 @@ namespace Infrastructure.Security
     {
 		CanAccessAdminArea,
 		CanDeleteData,
+		CanCreateProducts
     }
 
 	public class PrivilegeConstants

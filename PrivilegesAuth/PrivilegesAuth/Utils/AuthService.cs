@@ -53,7 +53,7 @@ namespace PrivilegesAuth.Utils
 		private JwtSecurityToken BuildToken(string userName, string email, string role, IEnumerable<Privilege> privileges)
 		{
 			var claims = new[] {
-				new Claim("role", role),
+				new Claim(ClaimTypes.Role, role),
 				new Claim(JwtRegisteredClaimNames.Email, email),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 				new Claim(ClaimTypes.Name, userName),

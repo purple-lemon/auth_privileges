@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Security;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -49,6 +50,7 @@ namespace PrivilegesAuth
 			});
 
 			services.AddScoped<AuthService>();
+			services.AddScoped<IClaimsTransformation, ClaimsTransformer>();
 			services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
 			services.AddSingleton<IAuthorizationHandler, PrivilegesHandler>();
 

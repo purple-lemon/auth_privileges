@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PrivilegesAuth.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,10 +16,11 @@ namespace PrivilegesAuth.Controllers
     {
         // GET: api/<controller>
         [HttpGet]
-		[Authorize]
+		[Authorize("Admin")]
         public string Get()
         {
-            return User.Identity.Name;
+			// code
+			return "here we go";
         }
 
         // GET api/<controller>/5
@@ -30,8 +32,17 @@ namespace PrivilegesAuth.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+		[HasPrivilege(Privilege.CanCreateProducts)]
+		public ActionResult Post([FromBody]CreateProductModel model)
         {
+			var newProductId = User.PerformInGroupScope(model.GroupId, 
+				new Privilege[] { Privilege.CanCreateProducts }, () =>
+			{
+				// call to Business logic to create product
+				int createdProductId = 12;
+				return createdProductId;
+			});
+			return Created("", newProductId);
         }
 
         // PUT api/<controller>/5
